@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Charm Nature</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #f0ebe0;
+  --dark: #16140f;
+  --olive: #424a38;
+  --olive-deep: #363d2c;
+  --text-light: rgba(240,235,224,0.93);
+  --text-muted: rgba(240,235,224,0.55);
+  --brown-text: #5a4a35;
+  --brown-muted: #8a7660;
+}
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--dark);
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* SCREENS */
+.screen {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.65s ease;
+  overflow: hidden;
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* BG */
+.bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform 9s ease-out;
+}
+.screen.active .bg { transform: scale(1.06); }
+.screen:not(.active) .bg { transform: scale(1); }
+.bg::after { content: ''; position: absolute; inset: 0; }
+
+/* LOGO */
+.logo {
+  position: absolute; bottom: 2.2rem;
+  letter-spacing: 0.22em; font-size: 0.6rem; font-weight: 400;
+  color: var(--text-muted); text-transform: uppercase; z-index: 2;
+}
+
+/* BACK BTN */
+.back-btn {
+  position: absolute; top: 1.4rem; left: 1.4rem; z-index: 10;
+  background: none; border: none; cursor: pointer; padding: 0.5rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif; font-weight: 400;
+  color: rgba(200,195,185,0.9);
+  -webkit-tap-highlight-color: transparent; transition: opacity 0.2s;
+}
+.back-btn:active { opacity: 0.4; }
+.back-btn svg { width: 14px; }
+
+/* ── SCREEN 1: HERO ── */
+#s-hero .bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1800' viewBox='0 0 1200 1800'%3E%3Cdefs%3E%3CradialGradient id='rg1' cx='38%25' cy='28%25' r='72%25'%3E%3Cstop offset='0%25' stop-color='%23b8c9a8'/%3E%3Cstop offset='100%25' stop-color='%2326301e'/%3E%3C/radialGradient%3E%3CradialGradient id='rg2' cx='75%25' cy='65%25' r='55%25'%3E%3Cstop offset='0%25' stop-color='%23869c72' stop-opacity='0.55'/%3E%3Cstop offset='100%25' stop-color='%23131a0d' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='rg3' cx='15%25' cy='80%25' r='45%25'%3E%3Cstop offset='0%25' stop-color='%23c8d4b4' stop-opacity='0.35'/%3E%3Cstop offset='100%25' stop-color='%23000' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='overlay' result='blend'/%3E%3CfeComposite in='blend' in2='SourceGraphic' operator='in'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='1200' height='1800' fill='url(%23rg1)'/%3E%3Crect width='1200' height='1800' fill='url(%23rg2)'/%3E%3Crect width='1200' height='1800' fill='url(%23rg3)'/%3E%3Crect width='1200' height='1800' fill='%23000' opacity='0.08' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+}
+#s-hero .bg::after {
+  background: linear-gradient(to top, rgba(10,9,6,0.78) 0%, rgba(10,9,6,0.18) 50%, rgba(10,9,6,0.04) 100%);
+}
+.hero-text {
+  position: relative; z-index: 2; text-align: center;
+  padding: 0 2.8rem; margin-bottom: 5rem;
+}
+.hero-text p {
+  font-size: 1.05rem; font-weight: 300; line-height: 1.9;
+  color: var(--text-light); letter-spacing: 0.01em;
+}
+.scroll-cue {
+  position: absolute; bottom: 5.2rem; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  cursor: pointer; animation: bob 2.4s ease-in-out infinite;
+}
+.scroll-cue span { display: block; width: 1px; height: 28px; background: var(--text-muted); }
+.scroll-cue svg { width: 12px; opacity: 0.5; }
+@keyframes bob {
+  0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); }
+}
+
+/* ── SCREEN 2: MENU ── */
+#s-menu .bg { background-color: var(--olive-deep); }
+#s-menu .bg::after { background: none; }
+.menu-items {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; margin-bottom: 2rem;
+}
+.menu-item {
+  font-size: 0.9rem; font-weight: 300; letter-spacing: 0.1em;
+  color: var(--text-light); text-transform: uppercase;
+  padding: 0.95rem 2rem; cursor: pointer;
+  width: 100%; text-align: center;
+  border: none; background: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative; transition: color 0.25s;
+}
+.menu-item::after {
+  content: ''; position: absolute; bottom: 0.6rem; left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 24px; height: 1px; background: var(--text-muted);
+  transition: transform 0.3s ease;
+}
+.menu-item:active { color: rgba(240,235,224,0.4); }
+.menu-item:hover::after { transform: translateX(-50%) scaleX(1); }
+.screen.active .menu-item:nth-child(1) { animation: fadeUp 0.55s 0.1s both; }
+.screen.active .menu-item:nth-child(2) { animation: fadeUp 0.55s 0.18s both; }
+.screen.active .menu-item:nth-child(3) { animation: fadeUp 0.55s 0.26s both; }
+.screen.active .menu-item:nth-child(4) { animation: fadeUp 0.55s 0.34s both; }
+.screen.active .menu-item:nth-child(5) { animation: fadeUp 0.55s 0.42s both; }
+.screen.active .menu-item:nth-child(6) { animation: fadeUp 0.55s 0.5s both; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SCREEN 3: SECTION INTRO ── */
+#s-section .bg::after {
+  background: linear-gradient(to top, rgba(8,7,4,0.8) 0%, rgba(8,7,4,0.3) 55%, rgba(8,7,4,0.12) 100%);
+}
+.section-content {
+  position: relative; z-index: 2; text-align: center;
+  padding: 0 2.4rem; margin-bottom: 5rem;
+}
+.section-label {
+  font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.6rem;
+}
+.section-body {
+  font-size: 0.95rem; font-weight: 300; line-height: 1.9;
+  color: var(--text-light);
+}
+.section-body p + p { margin-top: 0.9rem; }
+.section-cta {
+  position: absolute; bottom: 5.2rem; z-index: 2;
+  font-size: 0.6rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.6rem;
+  border: none; background: none; -webkit-tap-highlight-color: transparent; transition: color 0.3s;
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+}
+.section-cta::before { content: ''; display: block; width: 22px; height: 1px; background: currentColor; transition: width 0.3s; }
+.section-cta:active { color: var(--text-light); }
+.section-cta:active::before { width: 34px; }
+
+/* ── SCREEN 4: DETAIL ── */
+#s-detail {
+  justify-content: flex-start; overflow-y: auto;
+  padding: 4.5rem 0 4rem; -webkit-overflow-scrolling: touch;
+  align-items: stretch;
+}
+#s-detail.olive-bg { background: var(--olive-deep); }
+#s-detail.cream-bg { background: var(--cream); }
+
+.detail-inner { padding: 0 2.2rem; }
+
+.detail-header {
+  text-align: center; margin-bottom: 2.2rem; padding-bottom: 1.4rem;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.detail-header.light-border { border-bottom-color: rgba(240,235,224,0.15); }
+
+.detail-title {
+  font-size: 0.65rem; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; margin-bottom: 0.3rem;
+}
+.detail-subtitle {
+  font-size: 0.75rem; font-weight: 300; letter-spacing: 0.06em;
+  opacity: 0.55;
+}
+
+/* treatment items */
+.treatment-item {
+  text-align: center; padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+.treatment-item.light { border-bottom-color: rgba(240,235,224,0.12); }
+.treatment-name { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+.treatment-desc { font-size: 0.78rem; font-weight: 300; opacity: 0.7; margin-bottom: 0.25rem; }
+.treatment-meta { font-size: 0.72rem; font-weight: 300; opacity: 0.55; letter-spacing: 0.03em; }
+
+/* moment items */
+.moment-item { text-align: center; padding: 1.1rem 0; border-bottom: 1px solid rgba(240,235,224,0.12); }
+.moment-name { font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+.moment-time { font-size: 0.75rem; font-weight: 300; opacity: 0.6; }
+
+/* special experience items */
+.exp-item { text-align: center; padding: 1.0rem 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+.exp-name { font-size: 0.82rem; font-weight: 400; letter-spacing: 0.04em; }
+
+/* info rows */
+.info-block { margin-bottom: 2rem; }
+.info-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.7rem 0; border-bottom: 1px solid rgba(240,235,224,0.12); }
+.info-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; }
+.info-value { font-size: 0.75rem; font-weight: 300; text-align: right; opacity: 0.75; max-width: 55%; }
+.info-section-title { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; margin: 1.6rem 0 0.6rem; }
+
+/* photo strip for treatments */
+.photo-strip {
+  position: relative; height: 200px; overflow: hidden; margin: 1.8rem 0;
+}
+.photo-strip .photo-bg {
+  position: absolute; inset: 0; background-size: cover; background-position: center;
+}
+.photo-strip .photo-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,7,4,0.7) 0%, rgba(8,7,4,0.1) 100%);
+}
+.photo-strip .photo-text {
+  position: absolute; bottom: 1.4rem; left: 0; right: 0;
+  text-align: center; padding: 0 2rem;
+  font-size: 0.9rem; font-weight: 300; line-height: 1.7; color: var(--text-light); z-index: 2;
+}
+
+/* info olive color overrides */
+.olive-text { color: var(--text-light); }
+.cream-text { color: var(--brown-text); }
+
+/* link button */
+.link-btn {
+  display: inline-block; margin-top: 0.4rem;
+  font-size: 0.65rem; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase;
+  color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px;
+  opacity: 0.65; transition: opacity 0.2s;
+}
+.link-btn:active { opacity: 0.35; }
+
+.detail-logo {
+  text-align: center; margin-top: 2.4rem; margin-bottom: 0.5rem;
+  letter-spacing: 0.22em; font-size: 0.6rem; font-weight: 400; text-transform: uppercase;
+}
+
+/* scroll cue detail */
+.detail-scroll-cue {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  margin: 1rem auto 0; animation: bob 2.4s ease-in-out infinite;
+  cursor: pointer;
+}
+.detail-scroll-cue span { display: block; width: 1px; height: 22px; }
+.detail-scroll-cue svg { width: 12px; opacity: 0.4; }
+
+/* ── SETTINGS GEAR ── */
+.settings-gear {
+  position: absolute; bottom: 2rem; right: 1.6rem; z-index: 10;
+  background: none; border: none; cursor: pointer; padding: 0.5rem;
+  opacity: 0.22; transition: opacity 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.settings-gear:hover, .settings-gear:active { opacity: 0.55; }
+.settings-gear svg { width: 15px; stroke: var(--text-light); }
+
+/* ── PASSWORD MODAL ── */
+.pwd-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(16,14,9,0.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s;
+}
+.pwd-overlay.visible { opacity: 1; pointer-events: all; }
+.pwd-box {
+  text-align: center; padding: 2.8rem 2.4rem;
+  width: min(88vw, 340px);
+}
+.pwd-box .pwd-title {
+  font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 2rem;
+}
+.pwd-box input {
+  width: 100%; background: rgba(255,255,255,0.06); border: none;
+  border-bottom: 1px solid rgba(240,235,224,0.25); outline: none;
+  padding: 0.7rem 0.2rem; font-size: 0.85rem; font-weight: 300;
+  color: var(--text-light); font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  text-align: center; letter-spacing: 0.1em;
+  transition: border-color 0.2s;
+}
+.pwd-box input:focus { border-bottom-color: rgba(240,235,224,0.6); }
+.pwd-box .pwd-error {
+  font-size: 0.6rem; letter-spacing: 0.12em; color: rgba(200,150,120,0.8);
+  margin-top: 0.8rem; min-height: 1rem;
+}
+.pwd-box .pwd-actions {
+  display: flex; justify-content: center; gap: 2rem; margin-top: 1.8rem;
+}
+.pwd-btn {
+  background: none; border: none; cursor: pointer; font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-muted); padding: 0.4rem 0;
+  transition: color 0.2s; -webkit-tap-highlight-color: transparent;
+}
+.pwd-btn.primary { color: var(--text-light); }
+.pwd-btn:active { opacity: 0.5; }
+
+/* ── SETTINGS PANEL ── */
+.settings-panel {
+  position: fixed; inset: 0; z-index: 90;
+  background: #111009;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+  padding: 0 0 4rem;
+}
+.settings-panel.visible { opacity: 1; pointer-events: all; }
+
+.settings-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.3rem 1.6rem;
+  border-bottom: 1px solid rgba(240,235,224,0.08);
+  position: sticky; top: 0; background: #111009; z-index: 2;
+}
+.settings-topbar-title {
+  font-size: 0.58rem; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+.settings-close-btn {
+  background: none; border: none; cursor: pointer; padding: 0.4rem;
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted); -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s;
+}
+.settings-close-btn:active { color: var(--text-light); }
+
+.settings-body { padding: 1.6rem 1.6rem 0; }
+
+.settings-section {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(240,235,224,0.07);
+  padding-bottom: 2rem;
+}
+.settings-section:last-child { border-bottom: none; }
+
+.settings-section-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.settings-section-label {
+  font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(240,235,224,0.45);
+}
+.settings-section-arrow {
+  font-size: 0.7rem; color: rgba(240,235,224,0.25);
+  transition: transform 0.25s;
+}
+.settings-section-hd.open .settings-section-arrow { transform: rotate(90deg); }
+.settings-section-body { display: none; }
+.settings-section-body.open { display: block; }
+
+.settings-field { margin-bottom: 1.2rem; }
+.settings-field-label {
+  font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(240,235,224,0.3); margin-bottom: 0.4rem;
+}
+.settings-field input,
+.settings-field textarea {
+  width: 100%; background: rgba(255,255,255,0.04); border: none;
+  border-bottom: 1px solid rgba(240,235,224,0.14); outline: none;
+  padding: 0.55rem 0.2rem; font-size: 0.82rem; font-weight: 300;
+  color: var(--text-light); font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.02em; resize: vertical; min-height: 2.4rem;
+  transition: border-color 0.2s; line-height: 1.6;
+}
+.settings-field textarea { min-height: 5rem; }
+.settings-field input:focus,
+.settings-field textarea:focus { border-bottom-color: rgba(240,235,224,0.4); }
+
+.settings-row-actions {
+  display: flex; gap: 0.8rem; flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.settings-action-btn {
+  background: none; border: 1px solid rgba(240,235,224,0.15); cursor: pointer;
+  padding: 0.5rem 1rem; font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted); transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.settings-action-btn:active { background: rgba(240,235,224,0.08); }
+.settings-action-btn.danger { color: rgba(200,130,110,0.7); border-color: rgba(200,130,110,0.2); }
+.settings-action-btn.danger:active { background: rgba(200,130,110,0.08); }
+.settings-action-btn.save-all {
+  color: var(--text-light); border-color: rgba(240,235,224,0.35);
+  width: 100%; text-align: center; padding: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.settings-sub-item {
+  border: 1px solid rgba(240,235,224,0.08); padding: 1rem;
+  margin-bottom: 1rem; position: relative;
+}
+.settings-sub-item-title {
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(240,235,224,0.5); margin-bottom: 0.8rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.settings-remove-btn {
+  background: none; border: none; cursor: pointer; padding: 0.2rem 0.4rem;
+  font-size: 0.7rem; color: rgba(200,130,110,0.5); line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.settings-pwd-section { margin-top: 0.5rem; }
+.settings-pwd-section .settings-field { display: flex; gap: 0.8rem; align-items: flex-end; }
+.settings-pwd-section .settings-field input { flex: 1; }
+
+.save-toast {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  background: var(--olive-deep); color: var(--text-light);
+  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.7rem 1.6rem; z-index: 200;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.save-toast.show { opacity: 1; }
+
+/* ── SETTINGS ITEM EDITOR ── */
+.settings-hint {
+  font-size: 0.62rem; color: rgba(240,235,224,0.3); letter-spacing: 0.06em;
+  line-height: 1.6; margin-bottom: 1rem;
+}
+.set-subsection-title {
+  font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(240,235,224,0.35); margin-bottom: 0.9rem;
+  display: flex; align-items: center; gap: 0.7rem;
+}
+.set-subsection-hint {
+  font-size: 0.58rem; letter-spacing: 0.04em; text-transform: none;
+  color: rgba(240,235,224,0.2); font-weight: 300;
+}
+.settings-field select {
+  width: 100%; background: rgba(255,255,255,0.04); border: none;
+  border-bottom: 1px solid rgba(240,235,224,0.14); outline: none;
+  padding: 0.55rem 0.2rem; font-size: 0.82rem; font-weight: 300;
+  color: var(--text-light); font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  letter-spacing: 0.02em; cursor: pointer; appearance: none;
+  -webkit-appearance: none; transition: border-color 0.2s;
+}
+.settings-field select:focus { border-bottom-color: rgba(240,235,224,0.4); }
+.settings-field select option { background: #1a1810; color: var(--text-light); }
+
+.set-items-list { margin-bottom: 0.8rem; }
+
+.set-item {
+  border: 1px solid rgba(240,235,224,0.08);
+  margin-bottom: 0.6rem;
+  background: rgba(255,255,255,0.02);
+}
+.set-item-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid rgba(240,235,224,0.06);
+  background: rgba(255,255,255,0.025);
+}
+.set-item-type {
+  background: none; border: none; outline: none; cursor: pointer;
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(240,235,224,0.45); padding: 0; appearance: none; -webkit-appearance: none;
+}
+.set-item-type option { background: #1a1810; color: var(--text-light); text-transform: none; letter-spacing: 0; }
+.set-item-bar-actions { display: flex; gap: 0.2rem; align-items: center; }
+.set-item-move, .set-item-del {
+  background: none; border: none; cursor: pointer; padding: 0.2rem 0.45rem;
+  font-size: 0.72rem; color: rgba(240,235,224,0.25); line-height: 1;
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  transition: color 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.set-item-move:active { color: rgba(240,235,224,0.7); }
+.set-item-del { color: rgba(200,130,110,0.35); }
+.set-item-del:active { color: rgba(200,130,110,0.8); }
+.set-item-move-ph { display: inline-block; width: 1.4rem; }
+.set-item-fields { padding: 0.6rem 0.7rem 0.4rem; }
+.set-item-fields .settings-field { margin-bottom: 0.7rem; }
+.set-item-fields .settings-field:last-child { margin-bottom: 0; }
+.set-item-fields .settings-field-label { font-size: 0.52rem; }
+.set-item-fields input { font-size: 0.78rem; padding: 0.4rem 0.15rem; }
+
+.set-add-item-btn {
+  background: none; border: 1px dashed rgba(240,235,224,0.12); cursor: pointer;
+  width: 100%; padding: 0.65rem;
+  font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(240,235,224,0.3); transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent; margin-bottom: 1.4rem;
+}
+.set-add-item-btn:active { color: var(--text-muted); border-color: rgba(240,235,224,0.25); }
+
+.set-save-btn {
+  background: rgba(240,235,224,0.06); border: 1px solid rgba(240,235,224,0.2); cursor: pointer;
+  padding: 0.6rem 1.4rem; font-family: 'DM Sans', Helvetica, Arial, sans-serif;
+  font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-light); transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent; display: block; width: 100%; text-align: center;
+  margin-top: 0.4rem;
+}
+.set-save-btn:active { background: rgba(240,235,224,0.12); }
+
+.set-section-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 0.6rem;
+  padding-top: 1rem; margin-top: 0.5rem;
+  border-top: 1px solid rgba(240,235,224,0.07);
+}
+.set-footer-order { display: flex; gap: 0.5rem; }
+.set-footer-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.set-footer-actions .set-save-btn {
+  width: auto; margin-top: 0; padding: 0.5rem 1.2rem;
+}
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: HERO -->
+<div class="screen active" id="s-hero">
+  <div class="bg"></div>
+  <div class="hero-text">
+    <p>Time moves differently here.<br>
+    You may choose to do very little<br>
+    or explore what surrounds you.<br>
+    Walks, treatments and small<br>
+    rituals are simply invitations.</p>
+  </div>
+  <div class="scroll-cue" onclick="goTo('s-menu')">
+    <svg viewBox="0 0 12 7" fill="none" stroke="rgba(240,235,224,0.5)" stroke-width="1.1">
+      <polyline points="1,1 6,6 11,1"/>
+    </svg>
+    <span></span>
+  </div>
+  <div class="logo">Charm Nature</div>
+  <button class="settings-gear" onclick="openSettings()" title="Settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
+</div>
+
+<!-- SCREEN 2: MENU -->
+<div class="screen" id="s-menu">
+  <div class="bg"></div>
+  <button class="back-btn" onclick="goTo('s-hero')">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+      <polyline points="9,1 3,7 9,13"/>
+    </svg>
+  </button>
+  <div class="menu-items"></div>
+  <div class="logo">Charm Nature</div>
+</div>
+
+<!-- SCREEN 3: SECTION INTRO -->
+<div class="screen" id="s-section">
+  <button class="back-btn" id="section-back" onclick="goTo('s-menu')">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+      <polyline points="9,1 3,7 9,13"/>
+    </svg>
+  </button>
+  <div class="bg" id="section-bg"></div>
+  <div class="section-content">
+    <div class="section-label" id="section-label"></div>
+    <div class="section-body" id="section-text"></div>
+  </div>
+  <button class="section-cta" onclick="goTo('s-detail')">Discover</button>
+  <div class="logo">Charm Nature</div>
+</div>
+
+<!-- SCREEN 4: DETAIL -->
+<div class="screen" id="s-detail">
+  <button class="back-btn" id="detail-back" onclick="goTo('s-menu')">
+    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+      <polyline points="9,1 3,7 9,13"/>
+    </svg>
+  </button>
+  <div class="detail-inner" id="detail-inner"></div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="pwd-overlay" id="pwd-overlay">
+  <div class="pwd-box">
+    <div class="pwd-title">Settings · Enter password</div>
+    <input type="password" id="pwd-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPwd()">
+    <div class="pwd-error" id="pwd-error"></div>
+    <div class="pwd-actions">
+      <button class="pwd-btn" onclick="closePwdModal()">Cancel</button>
+      <button class="pwd-btn primary" onclick="checkPwd()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-panel" id="settings-panel">
+  <div class="settings-topbar">
+    <span class="settings-topbar-title">Settings</span>
+    <button class="settings-close-btn" onclick="closeSettings()">Close ✕</button>
+  </div>
+  <div class="settings-body" id="settings-body"></div>
+</div>
+
+<!-- SAVE TOAST -->
+<div class="save-toast" id="save-toast">Saved</div>
+
+<script>
+// ── DEFAULT DATA ─────────────────────────────────────────────────────────────
+const DEFAULT_HERO = `Time moves differently here.\nYou may choose to do very little\nor explore what surrounds you.\nWalks, treatments and small\nrituals are simply invitations.`;
+
+const DEFAULT_SECTIONS_ORDER = ['the-place','walks','treatments','moments','experiences','info'];
+
+// Each section has: label, bg, intro (plain text lines), theme ('cream'|'olive'), items[]
+// item types: 'heading', 'text', 'entry' (name+desc+meta), 'info-row' (label+value), 'link', 'divider'
+const DEFAULT_SECTIONS = {
+
+  'the-place': {
+    bg: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&q=80',
+    label: 'The place',
+    intro: ['Between the hills and the Atlantic, Charm Nature blends into the landscape.', 'Spaces are meant to be lived outdoors, following light and quiet.', 'Each stay finds its own pace.'],
+    theme: 'cream',
+    items: [
+      { type: 'text', value: 'Between the hills and the Atlantic, Charm Nature blends into the landscape.' },
+      { type: 'text', value: 'Spaces are meant to be lived outdoors, following light and quiet.' },
+      { type: 'text', value: 'Each stay finds its own pace.' }
+    ]
+  },
+
+  'walks': {
+    bg: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&q=80',
+    label: 'Walks',
+    intro: ['Trails begin at the property and lead towards the Atlantic.', 'Routes are available digitally. We recommend Wikiloc.'],
+    theme: 'cream',
+    items: [
+      { type: 'text', value: 'Trails begin at the property and lead towards the Atlantic.' },
+      { type: 'text', value: 'Routes are available digitally. We recommend Wikiloc.' },
+      { type: 'link', label: 'Open routes', url: 'https://www.wikiloc.com', text: 'wikiloc.com →' }
+    ]
+  },
+
+  'treatments': {
+    bg: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=900&q=80',
+    label: 'Treatments',
+    intro: ['Treatments designed to release the body after walking and sun.', 'Each session is adapted to how you arrive.'],
+    theme: 'cream',
+    items: [
+      { type: 'entry', name: 'Travel relief', desc: 'Short massage for back and neck', meta: '25 min · 45€' },
+      { type: 'entry', name: 'After walk recovery', desc: 'Massage focused on legs and back', meta: '60 min · 85€' },
+      { type: 'entry', name: 'Release tension', desc: 'Shoulders, neck and upper back', meta: '45 min · 60€' },
+      { type: 'entry', name: 'Deep relaxation', desc: 'Slow continuous movements', meta: '75 min · 100€' },
+      { type: 'entry', name: 'Full body treatment', desc: '', meta: '90 min · 120€' },
+      { type: 'entry', name: 'Warm application', desc: 'For muscle relaxation', meta: '60 min · 90€' },
+      { type: 'entry', name: 'End of day ritual', desc: 'Gentle treatment at sunset', meta: '60 min · 100€' }
+    ]
+  },
+
+  'moments': {
+    bg: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=900&q=80',
+    label: 'Simple moments',
+    intro: ['Simple moments that happen naturally throughout the day.', 'No reservation required.'],
+    theme: 'olive',
+    items: [
+      { type: 'entry', name: 'Afternoon tea', desc: '', meta: '17:00 / 18:30 · lounge' },
+      { type: 'entry', name: 'Outdoor reading', desc: '', meta: 'All day · garden' },
+      { type: 'entry', name: 'Sunset spots', desc: '', meta: 'Variable viewpoints' },
+      { type: 'entry', name: 'Stargazing', desc: '', meta: 'After dark · outdoors' },
+      { type: 'entry', name: 'Board games', desc: '', meta: 'All day · lounge' },
+      { type: 'entry', name: 'Morning stretching', desc: '', meta: '08:30 · outdoor deck' }
+    ]
+  },
+
+  'experiences': {
+    bg: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=900&q=80',
+    label: 'Special experiences',
+    intro: ['Moments prepared especially for you.', 'Available upon reservation.'],
+    theme: 'cream',
+    items: [
+      { type: 'entry', name: 'Golden hour', desc: '', meta: '' },
+      { type: 'entry', name: 'Sunset picnic', desc: '', meta: '' },
+      { type: 'entry', name: 'Sunset dinner', desc: '', meta: '' },
+      { type: 'entry', name: 'Breakfast in the room', desc: '', meta: '' },
+      { type: 'entry', name: 'Guided walk', desc: '', meta: '' },
+      { type: 'entry', name: 'Local tasting', desc: '', meta: '' },
+      { type: 'entry', name: 'Private stargazing', desc: '', meta: '' }
+    ]
+  },
+
+  'info': {
+    bg: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=900&q=80',
+    label: 'Useful information',
+    intro: ['Everything practical gathered in one place.'],
+    theme: 'olive',
+    items: [
+      { type: 'heading', value: 'Hours & contacts' },
+      { type: 'info-row', label: 'Reception', value: '07:30 / 22:30' },
+      { type: 'info-row', label: 'Breakfast', value: '08:00 / 10:30' },
+      { type: 'info-row', label: 'Check-out', value: 'Until 11:00' },
+      { type: 'info-row', label: 'Reservations', value: 'At reception · WhatsApp +351 936 001 003' },
+      { type: 'heading', value: 'Emergency' },
+      { type: 'info-row', label: 'Emergency', value: '112' },
+      { type: 'info-row', label: 'Nearest private hospital', value: 'Hospital CUF Sintra · +351 210 002 200' },
+      { type: 'info-row', label: 'Nearest public hospital', value: 'Hospital Prof. Dr. Fernando Fonseca · +351 214 348 200' },
+      { type: 'info-row', label: 'Health centre', value: '+351 219 289 220' },
+      { type: 'info-row', label: 'Pharmacy', value: '+351 219 292 187' },
+      { type: 'heading', value: 'Local' },
+      { type: 'info-row', label: 'Police', value: '+351 219 292 403' },
+      { type: 'info-row', label: 'Nearest lifeguarded beach', value: 'Praia da Adraga' },
+      { type: 'info-row', label: 'Taxi', value: '+351 967 997 911' },
+      { type: 'info-row', label: 'Transfer', value: 'Available on request' }
+    ]
+  }
+};
+
+// ── HTML RENDERER ─────────────────────────────────────────────────────────────
+function renderSectionDetail(s) {
+  const isCream = s.theme === 'cream';
+  const tc = isCream ? 'cream-text' : 'olive-text';
+  const borderStyle = isCream ? '' : ' light-border';
+  let html = `<div class="detail-header${borderStyle}">
+    <div class="detail-title ${tc}">${s.label}</div>
+  </div>`;
+
+  let inGroup = false;
+  s.items.forEach(item => {
+    if (item.type === 'heading') {
+      if (inGroup) { html += `</div>`; inGroup = false; }
+      html += `<div class="info-section-title ${tc}">${item.value}</div><div class="info-block">`;
+      inGroup = true;
+    } else if (item.type === 'info-row') {
+      if (!inGroup) { html += `<div class="info-block">`; inGroup = true; }
+      html += `<div class="info-row">
+        <span class="info-label ${tc}">${item.label}</span>
+        <span class="info-value ${tc}">${item.value.replace(/·/g,'<br>').replace(/\n/g,'<br>')}</span>
+      </div>`;
+    } else if (item.type === 'entry') {
+      if (inGroup) { html += `</div>`; inGroup = false; }
+      const itemClass = isCream ? 'treatment-item' : 'moment-item';
+      html += `<div class="${itemClass}${isCream ? '' : ''}">`;
+      html += `<div class="${isCream ? 'treatment-name' : 'moment-name'} ${tc}">${item.name}</div>`;
+      if (item.desc) html += `<div class="treatment-desc ${tc}">${item.desc}</div>`;
+      if (item.meta) html += `<div class="${isCream ? 'treatment-meta' : 'moment-time'} ${tc}">${item.meta}</div>`;
+      html += `</div>`;
+    } else if (item.type === 'text') {
+      if (inGroup) { html += `</div>`; inGroup = false; }
+      html += `<div style="text-align:center;font-size:0.85rem;font-weight:300;line-height:1.9;color:${isCream ? '#5a4a35' : 'var(--text-light)'};margin-bottom:0.8rem;">${item.value}</div>`;
+    } else if (item.type === 'link') {
+      if (inGroup) { html += `</div>`; inGroup = false; }
+      if (item.label) html += `<div style="font-size:0.6rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:#8a7660;text-align:center;margin:1.2rem 0 0.5rem;">${item.label}</div>`;
+      html += `<div style="text-align:center;margin-bottom:1rem;"><a class="link-btn" href="${item.url}" style="color:${isCream ? '#5a4a35' : 'var(--text-light)'}">${item.text || item.url}</a></div>`;
+    }
+  });
+  if (inGroup) html += `</div>`;
+  html += `<div class="detail-logo ${tc}" style="${isCream ? 'color:#8a7660' : 'opacity:0.4'}">Charm Nature</div>`;
+  return html;
+}
+
+// ── RUNTIME STATE ─────────────────────────────────────────────────────────────
+function loadData() {
+  try {
+    const saved = localStorage.getItem('charm_data_v2');
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return {
+    password: 'charm2026',
+    hero: DEFAULT_HERO,
+    sectionsOrder: [...DEFAULT_SECTIONS_ORDER],
+    sections: JSON.parse(JSON.stringify(DEFAULT_SECTIONS))
+  };
+}
+
+function saveData(data) {
+  try { localStorage.setItem('charm_data_v2', JSON.stringify(data)); } catch(e) {}
+}
+
+let appData = loadData();
+let sections = appData.sections;
+let currentSection = null;
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function renderMenu() {
+  const container = document.querySelector('#s-menu .menu-items');
+  container.innerHTML = '';
+  appData.sectionsOrder.forEach((key, i) => {
+    if (!sections[key]) return;
+    const btn = document.createElement('button');
+    btn.className = 'menu-item';
+    btn.textContent = sections[key].label;
+    btn.onclick = () => openSection(key);
+    btn.style.cssText = `animation:none;opacity:0`;
+    container.appendChild(btn);
+    setTimeout(() => { btn.style.cssText = `animation:fadeUp 0.55s ${0.1 + i*0.08}s both`; }, 10);
+  });
+}
+
+function renderHero() {
+  const p = document.querySelector('#s-hero .hero-text p');
+  if (p) p.innerHTML = appData.hero.split('\n').join('<br>');
+}
+
+function openSection(key) {
+  currentSection = key;
+  const s = sections[key];
+  const isCream = s.theme === 'cream';
+
+  document.getElementById('section-bg').style.backgroundImage = `url('${s.bg}')`;
+  document.getElementById('section-label').textContent = s.label;
+  document.getElementById('section-text').innerHTML = (s.intro || []).map(l => `<p>${l}</p>`).join('');
+
+  const detail = document.getElementById('s-detail');
+  detail.className = 'screen ' + (isCream ? 'cream-bg' : 'olive-bg');
+
+  const bc = isCream ? '#8a7660' : 'rgba(240,235,224,0.75)';
+  const backBtn = document.getElementById('detail-back');
+  backBtn.style.color = bc;
+  backBtn.querySelector('svg').setAttribute('stroke', bc);
+
+  document.getElementById('detail-inner').innerHTML = renderSectionDetail(s);
+  goTo('s-detail');
+}
+
+// ── SWIPE ─────────────────────────────────────────────────────────────────────
+let touchStart = null;
+document.addEventListener('touchstart', e => { touchStart = e.touches[0].clientY; }, { passive: true });
+document.addEventListener('touchend', e => {
+  if (touchStart === null) return;
+  const dy = touchStart - e.changedTouches[0].clientY;
+  touchStart = null;
+  const active = document.querySelector('.screen.active');
+  if (!active || Math.abs(dy) < 55) return;
+  if (active.id === 's-hero' && dy > 0) goTo('s-menu');
+  if (active.id === 's-menu' && dy < 0) goTo('s-hero');
+}, { passive: true });
+
+// ── PASSWORD ──────────────────────────────────────────────────────────────────
+function openSettings() {
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('pwd-error').textContent = '';
+  document.getElementById('pwd-overlay').classList.add('visible');
+  setTimeout(() => document.getElementById('pwd-input').focus(), 350);
+}
+function closePwdModal() {
+  document.getElementById('pwd-overlay').classList.remove('visible');
+}
+function checkPwd() {
+  const val = document.getElementById('pwd-input').value;
+  if (val === appData.password) {
+    closePwdModal();
+    openSettingsPanel();
+  } else {
+    document.getElementById('pwd-error').textContent = 'Incorrect password';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+// ── SETTINGS PANEL ────────────────────────────────────────────────────────────
+function openSettingsPanel() {
+  renderSettingsBody();
+  document.getElementById('settings-panel').classList.add('visible');
+  document.getElementById('settings-panel').scrollTop = 0;
+}
+function closeSettings() {
+  document.getElementById('settings-panel').classList.remove('visible');
+}
+function showToast(msg = 'Saved') {
+  const t = document.getElementById('save-toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── ITEM TYPE LABELS ──────────────────────────────────────────────────────────
+const TYPE_LABELS = {
+  'entry': 'Item',
+  'info-row': 'Info row',
+  'heading': 'Section heading',
+  'text': 'Text block',
+  'link': 'Link'
+};
+
+function itemTypeOptions(current) {
+  return Object.entries(TYPE_LABELS).map(([v,l]) =>
+    `<option value="${v}"${v===current?' selected':''}>${l}</option>`
+  ).join('');
+}
+
+function itemEditorHtml(item, idx, key) {
+  const t = item.type;
+  let fields = '';
+  if (t === 'heading' || t === 'text') {
+    fields = `<div class="settings-field"><div class="settings-field-label">${t==='heading'?'Heading':'Text'}</div>
+      <input type="text" data-field="value" value="${esc(item.value||'')}"></div>`;
+  } else if (t === 'entry') {
+    fields = `
+      <div class="settings-field"><div class="settings-field-label">Name</div>
+        <input type="text" data-field="name" value="${esc(item.name||'')}"></div>
+      <div class="settings-field"><div class="settings-field-label">Description (optional)</div>
+        <input type="text" data-field="desc" value="${esc(item.desc||'')}"></div>
+      <div class="settings-field"><div class="settings-field-label">Detail / price / time (optional)</div>
+        <input type="text" data-field="meta" value="${esc(item.meta||'')}"></div>`;
+  } else if (t === 'info-row') {
+    fields = `
+      <div class="settings-field"><div class="settings-field-label">Label</div>
+        <input type="text" data-field="label" value="${esc(item.label||'')}"></div>
+      <div class="settings-field"><div class="settings-field-label">Value</div>
+        <input type="text" data-field="value" value="${esc(item.value||'')}"></div>`;
+  } else if (t === 'link') {
+    fields = `
+      <div class="settings-field"><div class="settings-field-label">Caption above link (optional)</div>
+        <input type="text" data-field="label" value="${esc(item.label||'')}"></div>
+      <div class="settings-field"><div class="settings-field-label">URL</div>
+        <input type="text" data-field="url" value="${esc(item.url||'')}"></div>
+      <div class="settings-field"><div class="settings-field-label">Link text</div>
+        <input type="text" data-field="text" value="${esc(item.text||'')}"></div>`;
+  }
+
+  return `<div class="set-item" data-idx="${idx}">
+    <div class="set-item-bar">
+      <select class="set-item-type" data-idx="${idx}" data-key="${esc(key)}" onchange="changeItemType('${esc(key)}',${idx},this.value)">${itemTypeOptions(t)}</select>
+      <div class="set-item-bar-actions">
+        ${idx > 0 ? `<button class="set-item-move" onclick="moveItem('${esc(key)}',${idx},-1)" title="Move up">↑</button>` : '<span class="set-item-move-ph"></span>'}
+        <button class="set-item-move" onclick="moveItem('${esc(key)}',${idx},1)" title="Move down">↓</button>
+        <button class="set-item-del" onclick="removeItem('${esc(key)}',${idx})" title="Remove">✕</button>
+      </div>
+    </div>
+    <div class="set-item-fields">${fields}</div>
+  </div>`;
+}
+
+function renderSettingsBody() {
+  const body = document.getElementById('settings-body');
+
+  let html = '';
+
+  // ── Welcome text ──────────────────────────────────────────────────────────
+  html += `<div class="settings-section" id="set-sec-__hero">
+    <div class="settings-section-hd" onclick="toggleSec(this)">
+      <span class="settings-section-label">Welcome text</span>
+      <span class="settings-section-arrow">›</span>
+    </div>
+    <div class="settings-section-body">
+      <div class="settings-hint">Each line of the paragraph on the opening screen.</div>
+      <div class="settings-field">
+        <textarea id="set-hero" rows="6" style="white-space:pre">${esc(appData.hero)}</textarea>
+      </div>
+      <button class="set-save-btn" onclick="saveHero()">Save</button>
+    </div>
+  </div>`;
+
+  // ── Sections ──────────────────────────────────────────────────────────────
+  appData.sectionsOrder.forEach((key, idx) => {
+    const s = sections[key];
+    if (!s) return;
+    html += `<div class="settings-section" id="set-sec-${key}">
+      <div class="settings-section-hd" onclick="toggleSec(this)">
+        <span class="settings-section-label">${esc(s.label)}</span>
+        <span class="settings-section-arrow">›</span>
+      </div>
+      <div class="settings-section-body">
+
+        <div class="set-subsection-title">Menu & intro</div>
+        <div class="settings-field">
+          <div class="settings-field-label">Menu label</div>
+          <input type="text" id="set-${key}-label" value="${esc(s.label)}">
+        </div>
+        <div class="settings-field">
+          <div class="settings-field-label">Intro text (each line = one paragraph)</div>
+          <textarea id="set-${key}-intro" rows="3">${esc((s.intro||[]).join('\n'))}</textarea>
+        </div>
+        <div class="settings-field">
+          <div class="settings-field-label">Colour theme</div>
+          <select id="set-${key}-theme">
+            <option value="cream"${s.theme==='cream'?' selected':''}>Light (cream)</option>
+            <option value="olive"${s.theme==='olive'?' selected':''}>Dark (olive)</option>
+          </select>
+        </div>
+
+        <div class="set-subsection-title" style="margin-top:1.4rem">Detail content
+          <span class="set-subsection-hint">What guests see inside the section</span>
+        </div>
+        <div class="set-items-list" id="items-${key}">
+          ${(s.items||[]).map((item,i) => itemEditorHtml(item, i, key)).join('')}
+        </div>
+        <button class="set-add-item-btn" onclick="addItem('${key}')">+ Add row</button>
+
+        <div class="set-section-footer">
+          <div class="set-footer-order">
+            ${idx > 0 ? `<button class="settings-action-btn" onclick="moveSection('${key}',-1)">↑ Up</button>` : ''}
+            ${idx < appData.sectionsOrder.length-1 ? `<button class="settings-action-btn" onclick="moveSection('${key}',1)">↓ Down</button>` : ''}
+          </div>
+          <div class="set-footer-actions">
+            <button class="settings-action-btn danger" onclick="removeSection('${key}')">Remove section</button>
+            <button class="set-save-btn" onclick="saveSection('${key}')">Save section</button>
+          </div>
+        </div>
+
+      </div>
+    </div>`;
+  });
+
+  // ── Add section ───────────────────────────────────────────────────────────
+  html += `<div class="settings-section" id="set-sec-__new">
+    <div class="settings-section-hd" onclick="toggleSec(this)">
+      <span class="settings-section-label">+ Add new section</span>
+      <span class="settings-section-arrow">›</span>
+    </div>
+    <div class="settings-section-body">
+      <div class="settings-field">
+        <div class="settings-field-label">Menu label</div>
+        <input type="text" id="new-label" placeholder="e.g. Restaurant">
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">Intro text</div>
+        <textarea id="new-intro" rows="2" placeholder="Short text shown before the detail view."></textarea>
+      </div>
+      <div class="settings-field">
+        <div class="settings-field-label">Colour theme</div>
+        <select id="new-theme">
+          <option value="cream">Light (cream)</option>
+          <option value="olive">Dark (olive)</option>
+        </select>
+      </div>
+      <button class="set-save-btn" onclick="addSection()">Add section</button>
+    </div>
+  </div>`;
+
+  // ── Password ──────────────────────────────────────────────────────────────
+  html += `<div class="settings-section" id="set-sec-__pwd">
+    <div class="settings-section-hd" onclick="toggleSec(this)">
+      <span class="settings-section-label">Change password</span>
+      <span class="settings-section-arrow">›</span>
+    </div>
+    <div class="settings-section-body">
+      <div class="settings-field">
+        <div class="settings-field-label">New password</div>
+        <input type="password" id="new-pwd" placeholder="Min. 4 characters">
+      </div>
+      <button class="set-save-btn" onclick="changePassword()">Update password</button>
+    </div>
+  </div>`;
+
+  body.innerHTML = html;
+}
+
+function toggleSec(hd) {
+  hd.classList.toggle('open');
+  hd.nextElementSibling.classList.toggle('open');
+}
+
+// ── ITEM EDITING ──────────────────────────────────────────────────────────────
+function readItemsFromDom(key) {
+  const container = document.getElementById(`items-${key}`);
+  if (!container) return sections[key].items || [];
+  const items = [];
+  container.querySelectorAll('.set-item').forEach(el => {
+    const t = el.querySelector('.set-item-type').value;
+    const obj = { type: t };
+    el.querySelectorAll('[data-field]').forEach(inp => {
+      obj[inp.dataset.field] = inp.value;
+    });
+    items.push(obj);
+  });
+  return items;
+}
+
+function rerenderItemsList(key) {
+  const container = document.getElementById(`items-${key}`);
+  if (!container) return;
+  const items = sections[key].items || [];
+  container.innerHTML = items.map((item,i) => itemEditorHtml(item, i, key)).join('');
+}
+
+function changeItemType(key, idx, newType) {
+  // save current fields first
+  sections[key].items = readItemsFromDom(key);
+  // reset item to new type with blank fields
+  const defaults = {
+    'entry': { type:'entry', name:'', desc:'', meta:'' },
+    'info-row': { type:'info-row', label:'', value:'' },
+    'heading': { type:'heading', value:'' },
+    'text': { type:'text', value:'' },
+    'link': { type:'link', label:'', url:'', text:'' }
+  };
+  sections[key].items[idx] = defaults[newType] || { type: newType };
+  rerenderItemsList(key);
+}
+
+function moveItem(key, idx, dir) {
+  sections[key].items = readItemsFromDom(key);
+  const arr = sections[key].items;
+  const j = idx + dir;
+  if (j < 0 || j >= arr.length) return;
+  [arr[idx], arr[j]] = [arr[j], arr[idx]];
+  rerenderItemsList(key);
+}
+
+function removeItem(key, idx) {
+  sections[key].items = readItemsFromDom(key);
+  sections[key].items.splice(idx, 1);
+  rerenderItemsList(key);
+}
+
+function addItem(key) {
+  sections[key].items = readItemsFromDom(key);
+  // guess best type based on existing items
+  const existingTypes = sections[key].items.map(i => i.type);
+  const dominant = existingTypes.length
+    ? existingTypes.sort((a,b) => existingTypes.filter(x=>x===b).length - existingTypes.filter(x=>x===a).length)[0]
+    : 'entry';
+  const defaults = {
+    'entry': { type:'entry', name:'', desc:'', meta:'' },
+    'info-row': { type:'info-row', label:'', value:'' },
+    'heading': { type:'heading', value:'' },
+    'text': { type:'text', value:'' },
+    'link': { type:'link', label:'', url:'', text:'' }
+  };
+  sections[key].items.push(defaults[dominant] || { type:'entry', name:'', desc:'', meta:'' });
+  rerenderItemsList(key);
+  // scroll to bottom of list
+  setTimeout(() => {
+    const last = document.querySelector(`#items-${key} .set-item:last-child`);
+    if (last) last.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 50);
+}
+
+// ── SAVE ACTIONS ──────────────────────────────────────────────────────────────
+function saveHero() {
+  appData.hero = document.getElementById('set-hero').value;
+  saveData(appData);
+  renderHero();
+  showToast('Welcome text saved');
+}
+
+function saveSection(key) {
+  const label = document.getElementById(`set-${key}-label`).value.trim();
+  const introRaw = document.getElementById(`set-${key}-intro`).value;
+  const theme = document.getElementById(`set-${key}-theme`).value;
+  const items = readItemsFromDom(key);
+
+  sections[key].label = label || sections[key].label;
+  sections[key].intro = introRaw.split('\n').map(l=>l.trim()).filter(Boolean);
+  sections[key].theme = theme;
+  sections[key].items = items;
+  appData.sections = sections;
+  saveData(appData);
+  renderMenu();
+  showToast('Section saved');
+  const hd = document.querySelector(`#set-sec-${key} .settings-section-label`);
+  if (hd) hd.textContent = sections[key].label;
+}
+
+function removeSection(key) {
+  if (!confirm(`Remove "${sections[key].label}"? This cannot be undone.`)) return;
+  appData.sectionsOrder = appData.sectionsOrder.filter(k => k !== key);
+  delete appData.sections[key];
+  sections = appData.sections;
+  saveData(appData);
+  renderMenu();
+  renderSettingsBody();
+  showToast('Section removed');
+}
+
+function moveSection(key, dir) {
+  const arr = appData.sectionsOrder;
+  const i = arr.indexOf(key);
+  const j = i + dir;
+  if (j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+  saveData(appData);
+  renderMenu();
+  renderSettingsBody();
+  showToast('Order updated');
+}
+
+function addSection() {
+  const label = document.getElementById('new-label').value.trim();
+  const introRaw = document.getElementById('new-intro').value.trim();
+  const theme = document.getElementById('new-theme').value;
+  if (!label) { alert('Please enter a menu label.'); return; }
+  const key = 'custom_' + Date.now();
+  sections[key] = {
+    bg: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=900&q=80',
+    label, theme,
+    intro: introRaw ? introRaw.split('\n').map(l=>l.trim()).filter(Boolean) : [label],
+    items: []
+  };
+  appData.sections = sections;
+  appData.sectionsOrder.push(key);
+  saveData(appData);
+  renderMenu();
+  renderSettingsBody();
+  showToast('Section added');
+}
+
+function changePassword() {
+  const val = document.getElementById('new-pwd').value;
+  if (!val || val.length < 4) { alert('Password must be at least 4 characters.'); return; }
+  appData.password = val;
+  saveData(appData);
+  document.getElementById('new-pwd').value = '';
+  showToast('Password updated');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderHero();
+renderMenu();
+
+</script>
+</body>
+</html>
